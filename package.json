@@ -19,9 +19,6 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
-  "engines": {
-    "node": ">=15.01.0 <15.01.0"
-  },
   "devDependencies": {},
   "scripts": {
     "start": "node ./bin/www"
