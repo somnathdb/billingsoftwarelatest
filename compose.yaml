@@ -1,0 +1,6 @@
+services:
+  img:
+    build: /bin
+    container_name: billingsoftware
+    ports:
+      -5003:5003
