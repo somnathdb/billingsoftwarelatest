@@ -281,6 +281,12 @@ const billsSchema = new Schema({
         type:Number,
         default:0
     },
+    GSTNo:{
+        type:String
+    },
+    partyAddress:{
+        type:String
+    },
     active:{
         type:Boolean,
         default:true

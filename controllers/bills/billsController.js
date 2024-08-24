@@ -102,7 +102,9 @@ exports.addBills = async (req, res, next) => {
                 height7: body.height7,
                 height8: body.height8,
                 height9: body.height9,
-                height10: body.height10
+                height10: body.height10,
+                GSTNo:body.GSTNo,
+                partyAddress:body.partyAddress
             })
             let saveData = await newBill.save()
             if (saveData) {
@@ -217,7 +219,9 @@ exports.addBills = async (req, res, next) => {
                 height7: body.height7,
                 height8: body.height8,
                 height9: body.height9,
-                height10: body.height10
+                height10: body.height10,
+                GSTNo:body.GSTNo,
+                partyAddress:body.partyAddress
             })
             let saveData = await newBill.save()
             if (saveData) {
@@ -357,18 +361,28 @@ exports.updateBillById = async (req, res, next) => {
     try {
         const body = req.body;
         console.log("258",body)
+        const squarefeet1 = (body.width1 || 0) * (body.height1 || 0);
+        const squarefeet2 = (body.width2 || 0) * (body.height2 || 0);
+        const squarefeet3 = (body.width3 || 0) * (body.height3 || 0);
+        const squarefeet4 = (body.width4 || 0) * (body.height4 || 0);
+        const squarefeet5 = (body.width5 || 0) * (body.height5 || 0);
+        const squarefeet6 = (body.width6 || 0) * (body.height6 || 0);
+        const squarefeet7 = (body.width7 || 0) * (body.height7 || 0);
+        const squarefeet8 = (body.width8 || 0) * (body.height8 || 0);
+        const squarefeet9 = (body.width9 || 0) * (body.height9 || 0);
+        const squarefeet10 = (body.width10 || 0) * (body.height10 || 0);
         // const token = req.headers.authorization.split(" ")[1];
         // const decoded = jwt.verify(token, keys)
-        const t1 = (body.sq1 || 0) * (body.rate1 || 0);
-        const t2 = (body.sq2 || 0) * (body.rate2 || 0);
-        const t3 = (body.sq3 || 0) * (body.rate3 || 0);
-        const t4 = (body.sq4 || 0) * (body.rate4 || 0);
-        const t5 = (body.sq5 || 0) * (body.rate5 || 0);
-        const t6 = (body.sq6 || 0) * (body.rate6 || 0);
-        const t7 = (body.sq7 || 0) * (body.rate7 || 0);
-        const t8 = (body.sq8 || 0) * (body.rate8 || 0);
-        const t9 = (body.sq9 || 0) * (body.rate9 || 0);
-        const t10 = (body.sq10 || 0) * (body.rate10 || 0);
+        const t1 = (squarefeet1 || 0) * (body.rate1 || 0);
+        const t2 = (squarefeet2 || 0) * (body.rate2 || 0);
+        const t3 = (squarefeet3 || 0) * (body.rate3 || 0);
+        const t4 = (squarefeet4 || 0) * (body.rate4 || 0);
+        const t5 = (squarefeet5 || 0) * (body.rate5 || 0);
+        const t6 = (squarefeet6 || 0) * (body.rate6 || 0);
+        const t7 = (squarefeet7 || 0) * (body.rate7 || 0);
+        const t8 = (squarefeet8 || 0) * (body.rate8 || 0);
+        const t9 = (squarefeet9 || 0) * (body.rate9 || 0);
+        const t10 = (squarefeet10 || 0) * (body.rate10 || 0);
        if(body.withGST === "Yes"){
         console.log("272")
         let updateTotal = await billModel.findOneAndUpdate({
@@ -390,16 +404,16 @@ exports.updateBillById = async (req, res, next) => {
                 parti8: body.parti8,
                 parti9: body.parti9,
                 parti10: body.parti10,
-                sq1: body.sq1,
-                sq2: body.sq2,
-                sq3: body.sq3,
-                sq4: body.sq4,
-                sq5: body.sq5,
-                sq6: body.sq6,
-                sq7: body.sq7,
-                sq8: body.sq8,
-                sq9: body.sq9,
-                sq10: body.sq10,
+                sq1: squarefeet1,
+                sq2: squarefeet2,
+                sq3: squarefeet3,
+                sq4: squarefeet4,
+                sq5: squarefeet5,
+                sq6: squarefeet6,
+                sq7: squarefeet7,
+                sq8: squarefeet8,
+                sq9: squarefeet9,
+                sq10: squarefeet10,
                 rate1: body.rate1,
                 rate2: body.rate2,
                 rate3: body.rate3,
@@ -419,7 +433,29 @@ exports.updateBillById = async (req, res, next) => {
                 Total7: t7,
                 Total8: t8,
                 Total9: t9,
-                Total10: t10
+                Total10: t10,
+                width1: body.width1,
+                width2: body.width2,
+                width3: body.width3,
+                width4: body.width4,
+                width5: body.width5,
+                width6: body.width6,
+                width7: body.width7,
+                width8: body.width8,
+                width9: body.width9,
+                width10: body.width10,
+                height1: body.height1,
+                height2: body.height2,
+                height3: body.height3,
+                height4: body.height4,
+                height5: body.height5,
+                height6: body.height6,
+                height7: body.height7,
+                height8: body.height8,
+                height9: body.height9,
+                height10: body.height10,
+                GSTNo:body.GSTNo,
+                partyAddress:body.partyAddress
             }
         })
         if (updateTotal) {
@@ -480,16 +516,16 @@ exports.updateBillById = async (req, res, next) => {
                 parti8: body.parti8,
                 parti9: body.parti9,
                 parti10: body.parti10,
-                sq1: body.sq1,
-                sq2: body.sq2,
-                sq3: body.sq3,
-                sq4: body.sq4,
-                sq5: body.sq5,
-                sq6: body.sq6,
-                sq7: body.sq7,
-                sq8: body.sq8,
-                sq9: body.sq9,
-                sq10: body.sq10,
+                sq1: squarefeet1,
+                sq2: squarefeet2,
+                sq3: squarefeet3,
+                sq4: squarefeet4,
+                sq5: squarefeet5,
+                sq6: squarefeet6,
+                sq7: squarefeet7,
+                sq8: squarefeet8,
+                sq9: squarefeet9,
+                sq10: squarefeet10,
                 rate1: body.rate1,
                 rate2: body.rate2,
                 rate3: body.rate3,
@@ -509,7 +545,29 @@ exports.updateBillById = async (req, res, next) => {
                 Total7: t7,
                 Total8: t8,
                 Total9: t9,
-                Total10: t10
+                Total10: t10,
+                width1: body.width1,
+                width2: body.width2,
+                width3: body.width3,
+                width4: body.width4,
+                width5: body.width5,
+                width6: body.width6,
+                width7: body.width7,
+                width8: body.width8,
+                width9: body.width9,
+                width10: body.width10,
+                height1: body.height1,
+                height2: body.height2,
+                height3: body.height3,
+                height4: body.height4,
+                height5: body.height5,
+                height6: body.height6,
+                height7: body.height7,
+                height8: body.height8,
+                height9: body.height9,
+                height10: body.height10,
+                GSTNo:body.GSTNo,
+                partyAddress:body.partyAddress
             }
         })
         if (updateTotal) {
