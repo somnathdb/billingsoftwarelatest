@@ -363,7 +363,7 @@ exports.updateBillById = async (req, res, next) => {
         let PreviousBillAmount = await billModel.findOne({
             _id: body._id
         })
-        const TotalAdvance = PreviousBillAmount.advance + body.advance;
+        const TotalAdvance = (Number(PreviousBillAmount.advance) || 0) + (Number(body.advance) || 0);
         console.log("258",body)
         const squarefeet1 = (body.width1 || 0) * (body.height1 || 0);
         const squarefeet2 = (body.width2 || 0) * (body.height2 || 0);
