@@ -629,6 +629,50 @@ exports.getPendingBills = async (req, res, next) => {
     }
 }
 
+exports.getGSTBills = async (req, res, next) => {
+    try {
+        let data = await billModel.find({withGST:"Yes"}).sort({_id:-1})
+        if (data) {
+            res.status(200).json({
+                title: "success",
+                message: "All Bills Successfully Fetched",
+                status: true,
+                data: data
+            })
+        }
+    } catch (err) {
+        res.status(200).json({
+            title: "error",
+            message: "Internal Server Error",
+            status: false,
+            error: err
+        })
+    }
+}
+
+exports.getNonGSTBills = async (req, res, next) => {
+    try {
+        let data = await billModel.find({withGST:"No"}).sort({_id:-1})
+        if (data) {
+            res.status(200).json({
+                title: "success",
+                message: "All Bills Successfully Fetched",
+                status: true,
+                data: data
+            })
+        }
+    } catch (err) {
+        res.status(200).json({
+            title: "error",
+            message: "Internal Server Error",
+            status: false,
+            error: err
+        })
+    }
+}
+
+
+
 exports.getCompletedBills = async (req, res, next) => {
     try {
         let data = await billModel.find({billStatus:"Completed"}).sort({_id:-1})

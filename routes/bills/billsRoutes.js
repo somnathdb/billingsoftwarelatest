@@ -15,6 +15,9 @@ router.get('/getAllDeleteBills', billsController.getAllDeleteBills)
 
 router.get('/getPendingBills', billsController.getPendingBills)
 
+router.get('/getGSTBills', billsController.getGSTBills)
+router.get('/getNonGSTBills', billsController.getNonGSTBills)
+
 router.get('/getCompletedBills', billsController.getCompletedBills)
 
 router.get('/deleteBillById', billsController.deleteBillById)
