@@ -360,6 +360,10 @@ exports.getBillById = async (req, res, next) => {
 exports.updateBillById = async (req, res, next) => {
     try {
         const body = req.body;
+        let PreviousBillAmount = await billModel.findOne({
+            _id: body._id
+        })
+        const TotalAdvance = PreviousBillAmount.advance + body.advance;
         console.log("258",body)
         const squarefeet1 = (body.width1 || 0) * (body.height1 || 0);
         const squarefeet2 = (body.width2 || 0) * (body.height2 || 0);
@@ -505,6 +509,7 @@ exports.updateBillById = async (req, res, next) => {
                 partyName: body.partyName,
                 billStatus:body.billStatus,
                 withGST:body.withGST,
+                advance:TotalAdvance,
                 partyMobileNumber: body.partyMobileNumber,
                 parti1: body.parti1,
                 parti2: body.parti2,
