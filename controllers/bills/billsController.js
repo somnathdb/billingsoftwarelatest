@@ -360,11 +360,12 @@ exports.getBillById = async (req, res, next) => {
 exports.updateBillById = async (req, res, next) => {
     try {
         const body = req.body;
+        console.log("body",body)
         let PreviousBillAmount = await billModel.findOne({
             _id: body._id
         })
         const TotalAdvance = (Number(PreviousBillAmount.advance) || 0) + (Number(body.advance) || 0);
-        console.log("258",body)
+        console.log("258",PreviousBillAmount)
         const squarefeet1 = (body.width1 || 0) * (body.height1 || 0);
         const squarefeet2 = (body.width2 || 0) * (body.height2 || 0);
         const squarefeet3 = (body.width3 || 0) * (body.height3 || 0);
@@ -375,8 +376,6 @@ exports.updateBillById = async (req, res, next) => {
         const squarefeet8 = (body.width8 || 0) * (body.height8 || 0);
         const squarefeet9 = (body.width9 || 0) * (body.height9 || 0);
         const squarefeet10 = (body.width10 || 0) * (body.height10 || 0);
-        // const token = req.headers.authorization.split(" ")[1];
-        // const decoded = jwt.verify(token, keys)
         const t1 = (squarefeet1 || 0) * (body.rate1 || 0);
         const t2 = (squarefeet2 || 0) * (body.rate2 || 0);
         const t3 = (squarefeet3 || 0) * (body.rate3 || 0);
@@ -388,7 +387,6 @@ exports.updateBillById = async (req, res, next) => {
         const t9 = (squarefeet9 || 0) * (body.rate9 || 0);
         const t10 = (squarefeet10 || 0) * (body.rate10 || 0);
        if(body.withGST === "Yes"){
-        console.log("272")
         let updateTotal = await billModel.findOneAndUpdate({
             _id: body._id
         }, {
@@ -463,32 +461,31 @@ exports.updateBillById = async (req, res, next) => {
             }
         })
         if (updateTotal) {
-            const GSTAmount = ((updateTotal.Total1 || 0) +
-            (updateTotal.Total2 || 0) +
-            (updateTotal.Total3 || 0) +
-            (updateTotal.Total4 || 0) +
-            (updateTotal.Total5 || 0) +
-            (updateTotal.Total6 || 0) +
-            (updateTotal.Total7 || 0) +
-            (updateTotal.Total8 || 0) +
-            (updateTotal.Total9 || 0) +
-            (updateTotal.Total10 || 0)) * 1.18;
-            console.log("334",GSTAmount)
+            const GSTAmount = ((t1 || 0) +
+            (t2 || 0) +
+            (t3 || 0) +
+            (t4 || 0) +
+            (t5 || 0) +
+            (t6 || 0) +
+            (t7 || 0) +
+            (t8 || 0) +
+            (t9 || 0) +
+            (t10 || 0)) * 1.18;
             const updateT11 = await billModel.findOneAndUpdate({
                 _id: updateTotal._id
             }, {
                 $set: {
                     Total11:GSTAmount,
-                    GSTAmount:GSTAmount-((updateTotal.Total1 || 0) +
-                    (updateTotal.Total2 || 0) +
-                    (updateTotal.Total3 || 0) +
-                    (updateTotal.Total4 || 0) +
-                    (updateTotal.Total5 || 0) +
-                    (updateTotal.Total6 || 0) +
-                    (updateTotal.Total7 || 0) +
-                    (updateTotal.Total8 || 0) +
-                    (updateTotal.Total9 || 0) +
-                    (updateTotal.Total10 || 0))
+                    GSTAmount:GSTAmount-((t1 || 0) +
+                    (t2 || 0) +
+                    (t3 || 0) +
+                    (t4 || 0) +
+                    (t5 || 0) +
+                    (t6 || 0) +
+                    (t7 || 0) +
+                    (t8 || 0) +
+                    (t9 || 0) +
+                    (t10 || 0))
                 }
             })
             if (updateT11) {
@@ -580,16 +577,16 @@ exports.updateBillById = async (req, res, next) => {
                 _id: updateTotal._id
             }, {
                 $set: {
-                    Total11: (updateTotal.Total1 || 0) +
-                        (updateTotal.Total2 || 0) +
-                        (updateTotal.Total3 || 0) +
-                        (updateTotal.Total4 || 0) +
-                        (updateTotal.Total5 || 0) +
-                        (updateTotal.Total6 || 0) +
-                        (updateTotal.Total7 || 0) +
-                        (updateTotal.Total8 || 0) +
-                        (updateTotal.Total9 || 0) +
-                        (updateTotal.Total10 || 0)
+                    Total11: (t1 || 0) +
+                        (t2 || 0) +
+                        (t3 || 0) +
+                        (t4 || 0) +
+                        (t5 || 0) +
+                        (t6 || 0) +
+                        (t7 || 0) +
+                        (t8 || 0) +
+                        (t9 || 0) +
+                        (t10 || 0)
                 }
             })
             if (updateT11) {
