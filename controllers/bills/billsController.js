@@ -816,6 +816,56 @@ exports.getCompletedBillsAmount = async (req, res, next) => {
     }
 };
 
+exports.getAllBillsAmount = async (req, res, next) => {
+    try {
+        let data = await billModel.find({});
+
+        if (data) {
+            // Calculate the sum of the Total11 field
+            let totalSum = data.reduce((acc, bill) => acc + bill.Total11, 0);
+
+            res.status(200).json({
+                title: "success",
+                message: "All Bills Successfully Fetched",
+                status: true,
+                data: totalSum
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            title: "error",
+            message: "Internal Server Error",
+            status: false,
+            error: err
+        });
+    }
+};
+
+exports.getPendingBillsAmount = async (req, res, next) => {
+    try {
+        let data = await billModel.find({ billStatus: "Pending" });
+
+        if (data) {
+            // Calculate the sum of the Total11 field
+            let totalSum = data.reduce((acc, bill) => acc + bill.Total11, 0);
+
+            res.status(200).json({
+                title: "success",
+                message: "Pending Bills Successfully Fetched",
+                status: true,
+                data: totalSum
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            title: "error",
+            message: "Internal Server Error",
+            status: false,
+            error: err
+        });
+    }
+};
+
 exports.getAllBillsCount = async (req, res, next) => {
     try {
         let data = await billModel.find({})

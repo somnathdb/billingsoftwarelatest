@@ -26,6 +26,10 @@ router.get('/getPendingBillsCount', billsController.getPendingBillsCount)
 
 router.get('/getCompletedBillsAmount', billsController.getCompletedBillsAmount)
 
+router.get('/getPendingBillsAmount', billsController.getPendingBillsAmount)
+
+router.get('/getAllBillsAmount', billsController.getAllBillsAmount)
+
 router.get('/getBillById', billsController.getBillById)
 
 router.get('/getAllBillsCount', billsController.getAllBillsCount)
