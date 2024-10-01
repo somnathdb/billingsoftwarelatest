@@ -993,9 +993,15 @@ exports.getAllBillsGroupBy = async (req, res, next) => {
 
 exports.getLadgerBillById = async (req, res, next) => {
     try {
+        // const currentDate = new Date();
+        // const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        // const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        // console.log("999",startDate)
+        // console.log("1000",endDate)
         const currentDate = new Date();
-        const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const startDate = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
+        const endDate = currentDate;
         const body = req.query
         let data = await billModel.find({
             partyName: body.partyName,
