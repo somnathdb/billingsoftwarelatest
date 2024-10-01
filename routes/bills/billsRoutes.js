@@ -42,4 +42,6 @@ router.get('/getAllBillsGroupBy', billsController.getAllBillsGroupBy)
 
 router.get('/getLadgerBillById', billsController.getLadgerBillById)
 
+router.get('/getMonthlyBillsData', billsController.getMonthlyBillsData)
+
 module.exports = router

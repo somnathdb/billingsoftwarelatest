@@ -912,22 +912,63 @@ exports.search = async (req, res, next) => {
     try {
         const {partyName } = req.body;
             var search = req.body.partyName;
-            console.log("573",search)
+            console.log("573",req.body)
+            // if (search == "" || search == null) {
+            //     search_query = {
+            //         "partyName": {
+            //             $ne: null
+            //         },
+            //         "createdAt": {
+            //             $ne: null
+            //         }
+            //     };
+            // } else {
+            //     search_query = {
+            //         $or: [
+            //           {
+            //             "partyName": {
+            //               $regex: new RegExp(".*" + search + ".*", "i")
+            //             }
+            //           },
+            //           {
+            //             $expr: {
+            //               $eq: [ { $year: "$createdAt" }, req.body.selectedYear ]
+            //             }
+            //           }
+            //         ]
+            //       };
             if (search == "" || search == null) {
+                // Default query if no search input
                 search_query = {
-                    "partyName": {
-                        $ne: null
-                    }
+                    "partyName": { $ne: null },
+                    "createdAt": { $ne: null }
                 };
             } else {
                 search_query = {
-                    $or: [{
-                        "partyName": {
-                            $regex: new RegExp(".*" + search + ".*", "i")
+                    $and: [
+                        {
+                            // Null safety for both fields
+                            "partyName": { $ne: null },
+                            "createdAt": { $ne: null }
+                        },
+                        {
+                            // OR condition for matching either partyName or createdAt (year)
+                            $or: [
+                                {
+                                    "partyName": {
+                                        $regex: new RegExp(".*" + search + ".*", "i")  // Match partyName with search
+                                    }
+                                },
+                                {
+                                    $expr: {
+                                        $eq: [ { $year: "$createdAt" }, req.body.selectedYear ]  // Match year of createdAt
+                                    }
+                                }
+                            ]
                         }
-                    }],
+                    ]
                 };
-                
+            
                 let data = await billModel.find(search_query).sort({_id: -1});
                 
                 if (data) {
@@ -951,6 +992,14 @@ exports.search = async (req, res, next) => {
         console.log(err)
     }
 };
+
+
+
+
+
+
+
+
 
 exports.getAllBillsGroupBy = async (req, res, next) => {
     try {
@@ -1027,3 +1076,62 @@ exports.getLadgerBillById = async (req, res, next) => {
         })
     }
 }
+
+exports.getMonthlyBillsData = async (req, res, next) => {
+    try {
+        const { year } = req.query; // Get the financial year from the query parameter
+        const results = [];
+        
+        // Parse the financial year to get start and end years
+        const [startYear, endYear] = year.split('-').map(Number);
+
+        // Loop through the 12 months of the financial year
+        for (let i = 0; i < 12; i++) {
+            // Calculate the start and end date for each month
+            // Financial year starts in April
+            const startDate = new Date(startYear, i >= 3 ? i - 3 : i + 9, 1); // Adjust month for fiscal year
+            const endDate = new Date(startYear, i >= 3 ? i - 3 + 1 : i + 9, 0); // Last day of the month
+
+            // Fetch pending bills count for the month
+            const pendingCount = await billModel.countDocuments({
+                createdAt: {
+                    $gte: startDate,
+                    $lte: endDate
+                },
+                billStatus: "Pending"
+            });
+
+            // Fetch completed bills count for the month
+            const completedCount = await billModel.countDocuments({
+                createdAt: {
+                    $gte: startDate,
+                    $lte: endDate
+                },
+                billStatus: "Completed"
+            });
+
+            // Push the results for the month into the results array
+            results.push({
+                month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }), // Format month name and year
+                pendingCount,
+                completedCount
+            });
+        }
+
+        res.status(200).json({
+            title: "success",
+            message: "Data Successfully Fetched",
+            status: true,
+            data: results // Return the counts for the last 12 months
+        });
+    } catch (err) {
+        res.status(500).json({
+            title: "error",
+            message: "Internal Server Error",
+            status: false,
+            error: err
+        });
+    }
+};
+
+
