@@ -1077,8 +1077,67 @@ exports.getLadgerBillById = async (req, res, next) => {
     }
 }
 
+// exports.getMonthlyBillsData = async (req, res, next) => {
+//     try {
+//         const { year } = req.query; // Get the financial year from the query parameter
+//         const results = [];
+        
+//         // Parse the financial year to get start and end years
+//         const [startYear, endYear] = year.split('-').map(Number);
+
+//         // Loop through the 12 months of the financial year
+//         for (let i = 0; i < 12; i++) {
+//             // Calculate the start and end date for each month
+//             // Financial year starts in April
+//             const startDate = new Date(startYear, i >= 3 ? i - 3 : i + 9, 1); // Adjust month for fiscal year
+//             const endDate = new Date(startYear, i >= 3 ? i - 3 + 1 : i + 9, 0); // Last day of the month
+
+//             // Fetch pending bills count for the month
+//             const pendingCount = await billModel.countDocuments({
+//                 createdAt: {
+//                     $gte: startDate,
+//                     $lte: endDate
+//                 },
+//                 billStatus: "Pending"
+//             });
+
+//             // Fetch completed bills count for the month
+//             const completedCount = await billModel.countDocuments({
+//                 createdAt: {
+//                     $gte: startDate,
+//                     $lte: endDate
+//                 },
+//                 billStatus: "Completed"
+//             });
+
+//             // Push the results for the month into the results array
+//             results.push({
+//                 month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }), // Format month name and year
+//                 pendingCount,
+//                 completedCount
+//             });
+//         }
+
+//         res.status(200).json({
+//             title: "success",
+//             message: "Data Successfully Fetched",
+//             status: true,
+//             data: results // Return the counts for the last 12 months
+//         });
+//     } catch (err) {
+//         res.status(500).json({
+//             title: "error",
+//             message: "Internal Server Error",
+//             status: false,
+//             error: err
+//         });
+//     }
+// };
+
+
 exports.getMonthlyBillsData = async (req, res, next) => {
     try {
+        console.log("1140",req.query)
         const { year } = req.query; // Get the financial year from the query parameter
         const results = [];
         
@@ -1092,29 +1151,59 @@ exports.getMonthlyBillsData = async (req, res, next) => {
             const startDate = new Date(startYear, i >= 3 ? i - 3 : i + 9, 1); // Adjust month for fiscal year
             const endDate = new Date(startYear, i >= 3 ? i - 3 + 1 : i + 9, 0); // Last day of the month
 
-            // Fetch pending bills count for the month
-            const pendingCount = await billModel.countDocuments({
-                createdAt: {
-                    $gte: startDate,
-                    $lte: endDate
+            // Fetch pending bills count and sum for the month
+            const pendingBills = await billModel.aggregate([
+                {
+                    $match: {
+                        createdAt: {
+                            $gte: startDate,
+                            $lte: endDate
+                        },
+                        billStatus: "Pending"
+                    }
                 },
-                billStatus: "Pending"
-            });
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 },
+                        totalAmount: { $sum: "$Total11" }
+                    }
+                }
+            ]);
 
-            // Fetch completed bills count for the month
-            const completedCount = await billModel.countDocuments({
-                createdAt: {
-                    $gte: startDate,
-                    $lte: endDate
+            const pendingCount = pendingBills.length > 0 ? pendingBills[0].count : 0;
+            const pendingAmount = pendingBills.length > 0 ? pendingBills[0].totalAmount : 0;
+
+            // Fetch completed bills count and sum for the month
+            const completedBills = await billModel.aggregate([
+                {
+                    $match: {
+                        createdAt: {
+                            $gte: startDate,
+                            $lte: endDate
+                        },
+                        billStatus: "Completed"
+                    }
                 },
-                billStatus: "Completed"
-            });
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 },
+                        totalAmount: { $sum: "$Total11" }
+                    }
+                }
+            ]);
+
+            const completedCount = completedBills.length > 0 ? completedBills[0].count : 0;
+            const completedAmount = completedBills.length > 0 ? completedBills[0].totalAmount : 0;
 
             // Push the results for the month into the results array
             results.push({
                 month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }), // Format month name and year
                 pendingCount,
-                completedCount
+                pendingAmount,
+                completedCount,
+                completedAmount
             });
         }
 
@@ -1122,7 +1211,7 @@ exports.getMonthlyBillsData = async (req, res, next) => {
             title: "success",
             message: "Data Successfully Fetched",
             status: true,
-            data: results // Return the counts for the last 12 months
+            data: results // Return the counts and amounts for each month
         });
     } catch (err) {
         res.status(500).json({
@@ -1133,5 +1222,3 @@ exports.getMonthlyBillsData = async (req, res, next) => {
         });
     }
 };
-
-
