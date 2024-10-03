@@ -772,7 +772,7 @@ exports.getReportsBills = async (req, res, next) => {
 
 exports.getPendingBillsCount = async (req, res, next) => {
     try {
-        let data = await billModel.find({billStatus:"Pending"});
+        let data = await billModel.find({billStatus:"Pending",active:true});
         if (data) {
             res.status(200).json({
                 title: "success",
@@ -793,7 +793,7 @@ exports.getPendingBillsCount = async (req, res, next) => {
 
 exports.getCompletedBillsAmount = async (req, res, next) => {
     try {
-        let data = await billModel.find({ billStatus: "Completed" });
+        let data = await billModel.find({ billStatus:"Completed",active:true });
 
         if (data) {
             // Calculate the sum of the Total11 field
@@ -818,7 +818,7 @@ exports.getCompletedBillsAmount = async (req, res, next) => {
 
 exports.getAllBillsAmount = async (req, res, next) => {
     try {
-        let data = await billModel.find({});
+        let data = await billModel.find({active:true});
 
         if (data) {
             // Calculate the sum of the Total11 field
@@ -843,7 +843,7 @@ exports.getAllBillsAmount = async (req, res, next) => {
 
 exports.getPendingBillsAmount = async (req, res, next) => {
     try {
-        let data = await billModel.find({ billStatus: "Pending" });
+        let data = await billModel.find({ billStatus: "Pending",active:true });
 
         if (data) {
             // Calculate the sum of the Total11 field
@@ -868,7 +868,7 @@ exports.getPendingBillsAmount = async (req, res, next) => {
 
 exports.getAllBillsCount = async (req, res, next) => {
     try {
-        let data = await billModel.find({})
+        let data = await billModel.find({active:true})
         if (data) {
             res.status(200).json({
                 title: "success",
@@ -889,7 +889,7 @@ exports.getAllBillsCount = async (req, res, next) => {
 
 exports.getCompletedBillsCount = async (req, res, next) => {
     try {
-        let data = await billModel.find({billStatus:"Completed"});
+        let data = await billModel.find({billStatus:"Completed",active:true});
         if (data) {
             res.status(200).json({
                 title: "success",
