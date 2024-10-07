@@ -1098,12 +1098,6 @@ exports.getAllBillsGroupBy = async (req, res, next) => {
 
 exports.getLadgerBillById = async (req, res, next) => {
     try {
-        // const currentDate = new Date();
-        // const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        // const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
-        // console.log("999",startDate)
-        // console.log("1000",endDate)
         const currentDate = new Date();
         const startDate = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
         const endDate = currentDate;
@@ -1113,7 +1107,8 @@ exports.getLadgerBillById = async (req, res, next) => {
             createdAt: {
                 $gte: startDate,
                 $lte: endDate   
-            }
+            },
+            active:true
         })
         if (data) {
             res.status(200).json({
