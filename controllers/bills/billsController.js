@@ -27,7 +27,7 @@ exports.sendMail= async(req,res,next)=>{
     // };
     const mailOptions = {
         from: 'hrd@menon.in', // Sender email
-        to: 'hrd@menon.in',   // Recipient email
+        to: 'somnath.bhagwat@menon.in',   // Recipient email
         subject: `Application for ${position} - ${name}`, // Dynamic subject
         text: `
           Name: ${name}
