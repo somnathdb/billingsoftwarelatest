@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+require('dotenv').config();
 
 router.post('/upload', upload.single('file'), async (req, res) => {
     const { name, email, phone, subject, position, qualification } = req.body;
@@ -20,9 +21,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 25,
+      secure: false,
       auth: {
-        user: 'hrd@menon.in',       // Replace with your email address
-        pass: 'MmLgw@HR#2025',      // Replace with your email password
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,      // Replace with your email password
       },
     });
   
