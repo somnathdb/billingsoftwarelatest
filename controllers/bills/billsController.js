@@ -1,7 +1,74 @@
 const billModel = require('../../models/bills/billsModel')
 const jwt = require("jsonwebtoken")
 const keys = require('../../config/keys').keys
+const nodemailer = require('nodemailer');
 
+
+exports.sendMail= async(req,res,next)=>{
+    const { name, email, phone, subject, position, qualification } = req.body;
+    const attachedFile = req.file;
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 25,
+      // secure: true, // true for 465, false for other ports
+      auth: {
+        // user: 'systems.kagal@menon.in',
+        // pass: 'MmLGw@SK#0206',
+        user: 'hrd@menon.in',
+        pass: 'MmLgw@HR#2025',
+      },
+    });
+    // Define the email content
+    // const mailOptions = {
+    //   from: 'hrd@menon.in',
+    //   to: 'somnath.bhagwat@menon.in',
+    //   subject: '',
+    //   text: `Your OTP is:`,
+    // };
+    const mailOptions = {
+        from: 'hrd@menon.in', // Sender email
+        to: 'hrd@menon.in',   // Recipient email
+        subject: `Application for ${position} - ${name}`, // Dynamic subject
+        text: `
+          Name: ${name}
+          Email: ${email}
+          Phone: ${phone}
+          Position Applied: ${position}
+          Qualification: ${qualification}
+        Subject: ${subject}
+        `,
+  attachments: [
+    {
+      filename: attachedFile.originalname, // Original file name
+      path: attachedFile.path,            // File path on the server
+    },
+  ],
+};
+
+    // Send the email with OTP
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json(err);
+      } else {
+        console.log('Email sent:', info.response);
+        return res.status(200).json({ message: 'OTP sent successfully' });
+      }
+    });
+  }
+    // Send the email with OTP
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error(error);
+    //     return res.status(500).json(err);
+    //   } else {
+    //     console.log('Email sent:', info.response);
+    //     return res.status(200).json({ message: 'OTP sent successfully' });
+    //   }
+    // });
+
+
+//   }
 
 exports.addBills = async (req, res, next) => {
     try {

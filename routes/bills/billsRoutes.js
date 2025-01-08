@@ -44,4 +44,6 @@ router.get('/getLadgerBillById', billsController.getLadgerBillById)
 
 router.get('/getMonthlyBillsData', billsController.getMonthlyBillsData)
 
+router.post('/sendMail', billsController.sendMail)
+
 module.exports = router
