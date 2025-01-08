@@ -2,19 +2,63 @@ const express = require("express")
 const router = express.Router()
 const billsController = require('../../controllers/bills/billsController')
 const CheckAuth = require('../../auth/check-auth')
+const nodemailer = require('nodemailer');
 const multer = require('multer');
-
-// Configure multer for file storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads'); // Define upload folder
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname); // File will have original name
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+    const { name, email, phone, subject, position, qualification } = req.body;
+    const attachedFile = req.file;
+  
+    // Ensure that the file is provided
+    if (!attachedFile) {
+      return res.status(400).json({ message: 'File is required' });
+    }
+  
+    // Create a nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 25,
+      auth: {
+        user: 'hrd@menon.in',       // Replace with your email address
+        pass: 'MmLgw@HR#2025',      // Replace with your email password
+      },
+    });
+  
+    // Set up the email options, including the file attachment
+    const mailOptions = {
+      from: 'hrd@menon.in',                          // Sender email
+      to: 'hrd@menon.in',                // Recipient email
+      subject: `Application for ${position} - ${name}`, // Subject line with dynamic data
+      text: `
+        Name: ${name}
+        Email: ${email}
+        Phone: ${phone}
+        Position Applied: ${position}
+        Qualification: ${qualification}
+        Subject: ${subject}
+      `,
+      attachments: [
+        {
+          filename: attachedFile.originalname,  // Name of the uploaded file
+          content: attachedFile.buffer,         // The file content (buffer from memory)
+          encoding: 'base64',                   // Optional: specify encoding if needed
+        },
+      ],
+    };
+  
+    // Send the email with the file attachment
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to send email', error });
+      } else {
+        console.log('Email sent:', info.response);
+        return res.status(200).json({ message: 'Application sent successfully' });
+      }
+    });
+  });
 
 router.post('/addBill', billsController.addBills)
 
@@ -57,7 +101,7 @@ router.get('/getLadgerBillById', billsController.getLadgerBillById)
 
 router.get('/getMonthlyBillsData', billsController.getMonthlyBillsData)
 
-router.post('/upload', upload.single('file'), billsController.sendMail);
+// router.post('/upload', upload.single('file'), billsController.sendMail);
 
 
 module.exports = router

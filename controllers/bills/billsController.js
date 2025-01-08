@@ -1,7 +1,7 @@
 const billModel = require('../../models/bills/billsModel')
 const jwt = require("jsonwebtoken")
 const keys = require('../../config/keys').keys
-const nodemailer = require('nodemailer');
+
 
 
 // exports.sendMail= async(req,res,next)=>{
@@ -70,56 +70,7 @@ const nodemailer = require('nodemailer');
 
 //   }
 
-exports.sendMail = async (req, res, next) => {
-    const { name, email, phone, subject, position, qualification } = req.body;
-    const attachedFile = req.file;
-  
-    // Ensure file is provided
-    if (!attachedFile) {
-      return res.status(400).json({ message: 'File is required' });
-    }
-  
-    // Setup nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 25,
-      auth: {
-        user: 'hrd@menon.in',
-        pass: 'MmLgw@HR#2025',
-      },
-    });
-  
-    const mailOptions = {
-      from: 'hrd@menon.in',
-      to: 'somnath.bhagwat@menon.in',
-      subject: `Application for ${position} - ${name}`,
-      text: `
-        Name: ${name}
-        Email: ${email}
-        Phone: ${phone}
-        Position Applied: ${position}
-        Qualification: ${qualification}
-        Subject: ${subject}
-      `,
-      attachments: [
-        {
-          filename: attachedFile.originalname, // Original file name
-          path: attachedFile.path,             // File path
-        },
-      ],
-    };
-  
-    // Send the email with the attachment
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Failed to send email', error });
-      } else {
-        console.log('Email sent:', info.response);
-        return res.status(200).json({ message: 'Application sent successfully' });
-      }
-    });
-  };
+
 
 exports.addBills = async (req, res, next) => {
     try {
