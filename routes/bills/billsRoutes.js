@@ -23,8 +23,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,      // Replace with your email password
+        user:'hrd@menon.in',
+        pass: 'MmLgw@HR#2025',      // Replace with your email password
       },
     });
   
