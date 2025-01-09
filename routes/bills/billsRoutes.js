@@ -20,7 +20,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     // Create a nodemailer transporter
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
-      port: 587,
+      port: 25,
       secure: false,
       auth: {
         user:'hrd@menon.in',
