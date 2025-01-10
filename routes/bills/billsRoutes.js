@@ -18,15 +18,25 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     }
   
     // Create a nodemailer transporter
+    // const transporter = nodemailer.createTransport({
+    //   host: 'smtp.gmail.com',
+    //   port: 25,
+    //   secure: false,
+    //   auth: {
+    //     user:process.env.SMTP_USER,
+    //     pass: process.env.SMTP_PASS,      // Replace with your email password
+    //   },
+    // });
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 25,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user:process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,      // Replace with your email password
-      },
+        user: 'hrd@menon.in', // Replace with your Gmail address
+        pass: 'mhun rutk ujfx acrq' // Replace with your Gmail password or App Password mhun rutk ujfx acrq
+      }
     });
+    // Email options (sender, receiver, subject, and message)
+
+
   
     // Set up the email options, including the file attachment
     const mailOptions = {
