@@ -30,8 +30,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'hrd@menon.in', // Replace with your Gmail address
-        pass: 'mhun rutk ujfx acrq' // Replace with your Gmail password or App Password mhun rutk ujfx acrq
+        user: 'projectcc.iqub@menon.in', // Replace with your Gmail address
+        pass: 'muwh gmjn iidc guce' // Replace with your Gmail password or App Password mhun rutk ujfx acrq
       }
     });
     // Email options (sender, receiver, subject, and message)
@@ -40,7 +40,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   
     // Set up the email options, including the file attachment
     const mailOptions = {
-      from: 'hrd@menon.in',                          // Sender email
+      from: 'projectcc.iqub@menon.in',                          // Sender email
       to: 'hrd@menon.in',                // Recipient email
       subject: `Application for ${position} - ${name}`, // Subject line with dynamic data
       text: `
